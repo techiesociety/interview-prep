@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interview Readiness</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <body>
+        <div class="page-wrapper">
+            <div class="container">
+
+
+                <div class="sidebar">
+                    <h4>Select a topic to strengthen your interview readiness</h4>
+                    <ul>
+                        <li onclick="showTopic('OOP')">OOP</li>
+                        <li onclick="showTopic('DSA')">DSA</li>
+                        <li onclick="showTopic('OS')">OS</li>
+                    </ul>
+                </div>
+
+                <div class="content">
+
+                    <h2 id="topicTitle">OBJECT ORIENTED PROGRAMMING</h2>
+                    <div id="top-bar">
+                        <span id="welcome-msg">Welcome</span>
+                        <button id="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+
+                    <h2 id="welcome-msg"></h2>
+                    <div class="accordion-container" id="accordion"></div>
+                </div>
+
+            </div>
+
+            <footer class="footer">
+                Developed for you by <a href="https://techiesociety.github.io/sumit-portfolio/"
+                    target="_blank">https://techiesociety.github.io/sumit-portfolio/</a>
+            </footer>
+        </div>
+    </body>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+
+
+
+</body>
+
+</html>

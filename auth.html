@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Login / Signup</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Login / Signup</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <div id="auth-msg" style="color:red;"></div>
+    <button onclick="handleAuth()">Continue</button>
+
+    <p id="auth-msg"></p>
+  </div>
+
+  <script>
+    function handleAuth() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        document.getElementById('auth-msg').innerText = "Username and password are required!";
+        return;
+      }
+
+      let userData = JSON.parse(localStorage.getItem("userData")) || {};
+
+      if (userData[username]) {
+        // Login flow
+        if (userData[username].password === password) {
+          localStorage.setItem("loggedInUser", username);
+          window.location.href = "index.html";
+        } else {
+          document.getElementById('auth-msg').innerText = "Incorrect password!";
+        }
+      } else {
+        // Signup flow
+        userData[username] = {
+          password: password,
+          markedQuestions: {}
+        };
+        localStorage.setItem("userData", JSON.stringify(userData));
+        localStorage.setItem("loggedInUser", username);
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+
+
+
+
+
+</body>
+
+</html>
