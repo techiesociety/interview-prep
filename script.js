@@ -1,5 +1,3 @@
-
-
 const loggedInUser = localStorage.getItem("loggedInUser");
 
 if (!loggedInUser && window.location.pathname.includes("index.html")) {
@@ -7,21 +5,42 @@ if (!loggedInUser && window.location.pathname.includes("index.html")) {
 }
 /*-----------------------------------------------------------------------------------------------------*/
 
-
-
 function showTopic(topic) {
-  const accordion = document.getElementById("accordion");
+  currentTopic = topic;
   const topicTitle = document.getElementById("topicTitle");
 
-  topicTitle.textContent = topic.toUpperCase();
+  // Preserve dropdown
+  const selectEl = document.getElementById("difficultySelect");
+  topicTitle.innerHTML = `${topic.toUpperCase()} `;
+  if (selectEl) topicTitle.appendChild(selectEl);
+
+  filterQuestions();
+}
+
+/*------------------------------------------------------------------------------------------------------*/
+
+let currentTopic = "OOP"; // track current topic
+
+function filterQuestions() {
+  const selectedDifficulty = document.getElementById("difficultySelect").value;
+
+  const filteredQuestions = questions[currentTopic].filter(q =>
+    selectedDifficulty === "all" || q.difficulty === selectedDifficulty
+  );
+
+  renderQuestions(filteredQuestions);
+}
+
+function renderQuestions(questionList) {
+  const accordion = document.getElementById("accordion");
   accordion.innerHTML = "";
 
-  if (!questions[topic] || questions[topic].length === 0) {
-    accordion.innerHTML = "<p>No questions found for this topic.</p>";
+  if (!questionList || questionList.length === 0) {
+    accordion.innerHTML = "<p>No questions found for this selection.</p>";
     return;
   }
 
-  questions[topic].forEach((item, index) => {
+  questionList.forEach((item, index) => {
     const container = document.createElement("div");
     container.className = "accordion-item";
 
@@ -37,11 +56,11 @@ function showTopic(topic) {
 
     const doneBtn = document.createElement("button");
     doneBtn.className = "toggle-btn";
-    // Check if question is marked for this user
+
     const loggedInUser = localStorage.getItem("loggedInUser");
     const userData = JSON.parse(localStorage.getItem("userData")) || {};
     const userMarks = userData[loggedInUser]?.markedQuestions || {};
-    const key = `${topic}_${index}`;
+    const key = `${currentTopic}_${index}`;
     if (userMarks[key]) {
       doneBtn.classList.add("done");
     }
@@ -49,9 +68,8 @@ function showTopic(topic) {
     doneBtn.onclick = (e) => {
       e.stopPropagation();
       doneBtn.classList.toggle("done");
-      toggleQuestionDone(topic, index);
+      toggleQuestionDone(currentTopic, index);
     };
-
 
     const arrow = document.createElement("div");
     arrow.className = "arrow";
@@ -98,6 +116,8 @@ function showTopic(topic) {
   });
 }
 
+
+
 /*------------------------------------------------------------------------------------------------------*/
 function logout() {
   localStorage.removeItem("loggedInUser");
@@ -125,7 +145,7 @@ function toggleQuestionDone(subject, index) {
   // Save back
   userData[loggedInUser] = {
     ...(userData[loggedInUser] || {}),
-    markedQuestions: userMarks
+    markedQuestions: userMarks,
   };
 
   localStorage.setItem("userData", JSON.stringify(userData));

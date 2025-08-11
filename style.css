@@ -226,3 +226,54 @@ html, body {
 #logout-btn:hover {
   background-color: #444;
 }
+
+/*=============================================================*/
+
+/* Wrap the title and dropdown nicely */
+#topicTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f4c8a3;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #2c2c2c;
+}
+
+/* Style the dropdown */
+#topicTitle {
+  display: flex;
+  justify-content: space-between; /* Title left, dropdown right */
+  align-items: center;
+  background-color: #f4c8a3;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #2c2c2c;
+}
+
+#difficultySelect {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border: 2px solid #d98e54;
+  border-radius: 6px;
+  background-color: #fffaf5;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+#difficultySelect:hover {
+  border-color: #b56c36;
+  background-color: #fff3e6;
+}
+
+#difficultySelect:focus {
+  box-shadow: 0 0 5px rgba(210, 105, 30, 0.5);
+}
