@@ -6,17 +6,96 @@ if (!loggedInUser && window.location.pathname.includes("index.html")) {
 /*-----------------------------------------------------------------------------------------------------*/
 
 function showTopic(topic) {
-  currentTopic = topic;
+  const accordion = document.getElementById("accordion");
   const topicTitle = document.getElementById("topicTitle");
 
-  // Preserve dropdown
+  // Keep the existing dropdown in place
   const selectEl = document.getElementById("difficultySelect");
   topicTitle.innerHTML = `${topic.toUpperCase()} `;
   if (selectEl) topicTitle.appendChild(selectEl);
 
-  filterQuestions();
-}
+  accordion.innerHTML = "";
 
+  if (!questions[topic] || questions[topic].length === 0) {
+    accordion.innerHTML = "<p>No questions found for this topic.</p>";
+    return;
+  }
+
+  questions[topic].forEach((item, index) => {
+    const container = document.createElement("div");
+    container.className = "accordion-item";
+
+    const header = document.createElement("div");
+    header.className = "question-header";
+
+    const title = document.createElement("div");
+    title.className = "question-title";
+    title.textContent = item.question;
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const doneBtn = document.createElement("button");
+    doneBtn.className = "toggle-btn";
+    // Check if question is marked for this user
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const userMarks = userData[loggedInUser]?.markedQuestions || {};
+    const key = `${topic}_${index}`;
+    if (userMarks[key]) {
+      doneBtn.classList.add("done");
+    }
+
+    doneBtn.onclick = (e) => {
+      e.stopPropagation();
+      doneBtn.classList.toggle("done");
+      toggleQuestionDone(topic, index);
+    };
+
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
+    arrow.innerHTML = "&#9654;";
+
+    header.onclick = () => {
+      const isVisible = answer.style.display === "block";
+      answer.style.display = isVisible ? "none" : "block";
+      arrow.classList.toggle("open", !isVisible);
+    };
+
+    actions.appendChild(doneBtn);
+    actions.appendChild(arrow);
+
+    header.appendChild(title);
+    header.appendChild(actions);
+
+    const answer = document.createElement("div");
+    answer.className = "answer";
+
+    const codeBlock = document.createElement("code");
+    codeBlock.textContent = item.code;
+
+    const copyBtn = document.createElement("button");
+    copyBtn.textContent = "Copy Code";
+    copyBtn.className = "copy-btn";
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(item.code).then(() => {
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => (copyBtn.textContent = "Copy Code"), 1500);
+      });
+    };
+
+    const explanation = document.createElement("p");
+    explanation.textContent = item.explanation;
+
+    answer.appendChild(copyBtn);
+    answer.appendChild(codeBlock);
+    answer.appendChild(explanation);
+
+    container.appendChild(header);
+    container.appendChild(answer);
+    accordion.appendChild(container);
+  });
+}
 /*------------------------------------------------------------------------------------------------------*/
 
 let currentTopic = "OOP"; // track current topic
@@ -150,9 +229,10 @@ function toggleQuestionDone(subject, index) {
 
   localStorage.setItem("userData", JSON.stringify(userData));
 
-  // Re-render questions
-  renderQuestions(subject); // assuming you have a function that renders subject questions
+  // ✅ Re-render properly
+  showTopic(subject); // instead of renderQuestions(subject)
 }
+
 
 /*-----------------------------copy btn-------------------------------------------------------------------------*/
 
